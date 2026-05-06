@@ -1,43 +1,68 @@
 # sonar-model-metric-grid
 
-sonar-model-metric-grid is a Haskell project for ml utilities. It focuses on this technical goal: Create a Haskell reference implementation for metric workflows, centered on simulation kernel, seeded input scenarios, and deterministic summary checks.
+`sonar-model-metric-grid` explores ml utilities in Haskell. The repository keeps the core rule set compact, then surrounds it with examples that show how the decisions move.
 
-## Why it exists
+## Sonar Model Metric Grid Notes
 
-Small engineering tools are easiest to trust when their rules are explicit, testable, and cheap to run locally. This repository packages a focused model with fixture data and a local verification path so behavior can be reviewed without external services.
+The quickest review path is the verifier first, then the fixtures, then the operations note. That order makes it easy to see whether the code, data, and explanation still agree.
 
-## Features
+## Why This Exists
 
-- Deterministic policy scoring over fixture scenarios.
-- Clear accept or review decisions based on a documented threshold.
-- A command-line or local test path for quick validation.
-- Golden fixture data for repeatable checks.
-- Minimal dependencies and a compact project layout.
+This is not a wrapper around a service. It is a self-contained project that shows how the model behaves when demand, capacity, latency, risk, and weight move in different directions.
 
-## Architecture Notes
+## Feature Notes
 
-The core module exposes a small scoring API. Inputs are simple numeric signals: demand, capacity, latency, risk, and weight. The score uses a threshold of 171, risk penalty 7, latency penalty 4, and weight bonus 3. Tests exercise the public API against the fixture cases in `fixtures/cases.csv`.
+- Models feature signals with deterministic scoring and explicit review decisions.
+- Uses fixture data to keep metric checks changes visible in code review.
+- Includes extended examples for windowed behavior, including `surge` and `degraded`.
+- Documents explainable outputs tradeoffs in `docs/operations.md`.
+- Runs locally with a single verification command and no external credentials.
 
-## Setup
+## Implementation Notes
 
-Install the Haskell toolchain and run commands from the repository root.
+The design is intentionally direct: parse or construct a signal, score it, classify it, and verify the expected branch. This makes the repository useful for studying ml utilities behavior without needing a service or database unless the language project itself is SQL. The Haskell code keeps the pure scoring function isolated so tests can check it without setup.
 
-## Usage
+## Code Tour
+
+- `src`: primary implementation
+- `tests`: verification harness
+- `fixtures`: compact golden scenarios
+- `examples`: expanded scenario set
+- `metadata`: project constants and verification metadata
+- `docs`: operations and extension notes
+- `scripts`: local verification and audit commands
+
+## Local Setup
+
+The only required setup is the local Haskell toolchain. After cloning, stay in the repo root so fixture paths resolve correctly.
+
+## Try It
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1
 ```
 
-The verification script builds or runs the project and checks the fixture decisions.
+This runs the language-level build or test path against the compact fixture set.
 
 ## Tests
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/audit.ps1
 ```
 
-## Limitations And Roadmap
+The audit command checks repository structure and README constraints before it delegates to the verifier.
 
-- The fixture set is intentionally small so it can be audited by hand.
-- Future work could add richer domain-specific input adapters.
-- The model is a local demonstration and does not claim production use.
+## Example Scenarios
+
+The extended cases are not random smoke tests. `degraded` keeps pressure on the review path, while `surge` shows the model when capacity and weight are strong enough to clear the threshold.
+
+## Boundaries
+
+The fixture set is deliberately small. That keeps the review surface clear, but it also means the model should not be treated as a complete domain simulator.
+
+## Roadmap
+
+- Add a short report command that prints the score breakdown for a single scenario.
+- Add malformed input fixtures so the failure path is as visible as the happy path.
+- Split the scoring constants into a typed configuration object and validate it before use.
+- Add one more ml utilities fixture that focuses on a malformed or borderline input.
