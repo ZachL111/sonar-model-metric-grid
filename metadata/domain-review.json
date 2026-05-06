@@ -1,0 +1,73 @@
+{
+  "repo": "sonar-model-metric-grid",
+  "language": "Haskell",
+  "category": "ML utilities",
+  "goal": "Create a Haskell reference implementation for metric workflows, centered on simulation kernel, seeded input scenarios, and deterministic summary checks.",
+  "review_model": {
+    "terms": [
+      "feature drift",
+      "window width",
+      "metric stability",
+      "explainability"
+    ],
+    "lanes": [
+      "ship",
+      "watch",
+      "hold"
+    ],
+    "score": "signal * 2 + slack + confidence - drag * 3",
+    "purpose": "surface the domain-specific cases that need the most careful review"
+  },
+  "cases": [
+    {
+      "name": "baseline",
+      "focus": "feature drift",
+      "signal": 41,
+      "slack": 47,
+      "drag": 24,
+      "confidence": 87,
+      "score": 144,
+      "lane": "ship"
+    },
+    {
+      "name": "stress",
+      "focus": "window width",
+      "signal": 63,
+      "slack": 41,
+      "drag": 18,
+      "confidence": 80,
+      "score": 193,
+      "lane": "ship"
+    },
+    {
+      "name": "edge",
+      "focus": "metric stability",
+      "signal": 79,
+      "slack": 34,
+      "drag": 16,
+      "confidence": 53,
+      "score": 197,
+      "lane": "ship"
+    },
+    {
+      "name": "recovery",
+      "focus": "explainability",
+      "signal": 63,
+      "slack": 34,
+      "drag": 27,
+      "confidence": 47,
+      "score": 126,
+      "lane": "watch"
+    },
+    {
+      "name": "stale",
+      "focus": "feature drift",
+      "signal": 58,
+      "slack": 42,
+      "drag": 9,
+      "confidence": 83,
+      "score": 214,
+      "lane": "ship"
+    }
+  ]
+}
