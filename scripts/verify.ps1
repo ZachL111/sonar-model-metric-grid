@@ -63,3 +63,9 @@ ghc -isrc tests/Test.hs -outputdir build -o build/test.exe
 ./build/test.exe
 
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check-sonar-model-metric-detail.ps1
+
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check-sonar-model-metric-properties.ps1
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check-sonar-model-metric-golden.ps1
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
